@@ -8,10 +8,10 @@ import { InlineSVGConfig } from './inline-svg.config';
 
 @Injectable()
 export class SVGCacheService {
-  private _cache: Map<string, SVGElement>;
-  private _inProgressReqs: Map<string, Observable<SVGElement>>;
+  private static _cache: Map<string, SVGElement>;
+  private static _inProgressReqs: Map<string, Observable<SVGElement>>;
 
-  private _baseUrl: string;
+  private static _baseUrl: string;
 
   private _renderer: Renderer2;
 
@@ -25,58 +25,58 @@ export class SVGCacheService {
 
     this.setBaseUrl();
 
-    this._cache = new Map<string, SVGElement>();
-    this._inProgressReqs = new Map<string, Observable<SVGElement>>();
+    SVGCacheService._cache = new Map<string, SVGElement>();
+    SVGCacheService._inProgressReqs = new Map<string, Observable<SVGElement>>();
   }
 
   getSVG(url: string, cache: boolean = true): Observable<SVGElement> {
     const absUrl = this.getAbsoluteUrl(url);
 
     // Return cached copy if it exists
-    if (cache && this._cache.has(absUrl)) {
-      return of(this._cloneSVG(this._cache.get(absUrl)));
+    if (cache && SVGCacheService._cache.has(absUrl)) {
+      return of(this._cloneSVG(SVGCacheService._cache.get(absUrl)));
     }
 
     // Return existing fetch observable
-    if (this._inProgressReqs.has(absUrl)) {
-      return this._inProgressReqs.get(absUrl);
+    if (SVGCacheService._inProgressReqs.has(absUrl)) {
+      return SVGCacheService._inProgressReqs.get(absUrl);
     }
 
     // Otherwise, make the HTTP call to fetch
     const req = this._http.get(absUrl, { responseType: 'text' })
       .pipe(
         finalize(() => {
-          this._inProgressReqs.delete(absUrl);
+          SVGCacheService._inProgressReqs.delete(absUrl);
         }),
         share(),
         map((svgText: string) => {
           const svgEl = this._svgElementFromString(svgText);
-          this._cache.set(absUrl, svgEl);
+          SVGCacheService._cache.set(absUrl, svgEl);
           return this._cloneSVG(svgEl);
         })
       );
 
-    this._inProgressReqs.set(absUrl, req);
+    SVGCacheService._inProgressReqs.set(absUrl, req);
 
     return req;
   }
 
   setBaseUrl(baseUrl?: string): void {
     if (baseUrl) {
-      this._baseUrl = baseUrl;
+      SVGCacheService._baseUrl = baseUrl;
     } else if (this._config) {
-      this._baseUrl = this._config.baseUrl;
+      SVGCacheService._baseUrl = this._config.baseUrl;
     } else if (this._appBase !== null) {
-      this._baseUrl = this._appBase;
+      SVGCacheService._baseUrl = this._appBase;
     } else if (this._location !== null) {
-      this._baseUrl = this._location.getBaseHrefFromDOM();
+      SVGCacheService._baseUrl = this._location.getBaseHrefFromDOM();
     }
   }
 
   getAbsoluteUrl(url: string): string {
     // Prepend user-configured base if present and URL doesn't seem to have its own
-    if (this._baseUrl && !/^https?:\/\//i.test(url)) {
-      url = this._baseUrl + url;
+    if (SVGCacheService._baseUrl && !/^https?:\/\//i.test(url)) {
+      url = SVGCacheService._baseUrl + url;
 
       // Convert leading "//" to "/" to prevent a malformed URL
       // See https://github.com/arkon/ng-inline-svg/issues/50
