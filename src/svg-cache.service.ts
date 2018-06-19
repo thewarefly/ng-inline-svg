@@ -61,8 +61,10 @@ export class SVGCacheService {
     return req;
   }
 
-  setBaseUrl(): void {
-    if (this._config) {
+  setBaseUrl(baseUrl?: string): void {
+    if (baseUrl) {
+      this._baseUrl = baseUrl;
+    } else if (this._config) {
       this._baseUrl = this._config.baseUrl;
     } else if (this._appBase !== null) {
       this._baseUrl = this._appBase;
