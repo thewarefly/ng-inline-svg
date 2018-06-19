@@ -1,5 +1,4 @@
-import { Inject, Injectable, Optional, Renderer2, RendererFactory2 } from '@angular/core';
-import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
+import { Injectable, Optional, Renderer2, RendererFactory2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -20,17 +19,22 @@ export class SVGCacheService {
   private _renderer: Renderer2;
 
   constructor(
-    @Optional() @Inject(APP_BASE_HREF) private _appBase: string,
-    @Optional() private _location: PlatformLocation,
-    @Optional() private _config: InlineSVGConfig,
+    @Optional() config: InlineSVGConfig,
     private _http: HttpClient,
     rendererFactory: RendererFactory2) {
     this._renderer = rendererFactory.createRenderer(null, null);
 
-    this.setBaseUrl();
+    if (config && !SVGCacheService._baseUrl) {
+      this.setBaseUrl(config);
+    }
 
-    SVGCacheService._cache = new Map<string, SVGElement>();
-    SVGCacheService._inProgressReqs = new Map<string, Observable<SVGElement>>();
+    if (!SVGCacheService._cache) {
+      SVGCacheService._cache = new Map<string, SVGElement>();
+    }
+
+    if (!SVGCacheService._inProgressReqs) {
+      SVGCacheService._inProgressReqs = new Map<string, Observable<SVGElement>>();
+    }
   }
 
   getSVG(url: string, cache: boolean = true): Observable<SVGElement> {
@@ -64,15 +68,9 @@ export class SVGCacheService {
     return req;
   }
 
-  setBaseUrl(baseUrl?: string): void {
-    if (baseUrl) {
-      SVGCacheService._baseUrl = baseUrl;
-    } else if (this._config) {
-      SVGCacheService._baseUrl = this._config.baseUrl;
-    } else if (this._appBase !== null) {
-      SVGCacheService._baseUrl = this._appBase;
-    } else if (this._location !== null) {
-      SVGCacheService._baseUrl = this._location.getBaseHrefFromDOM();
+  setBaseUrl(config: InlineSVGConfig): void {
+    if (config) {
+      SVGCacheService._baseUrl = config.baseUrl;
     }
   }
 
