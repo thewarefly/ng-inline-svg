@@ -1,14 +1,14 @@
 {
-  "name": "ng-inline-svg",
+  "name": "@warefly/ng-inline-svg",
   "version": "8.3.0",
   "description": "Angular directive for inserting an SVG inline within an element.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arkon/ng-inline-svg.git"
+    "url": "https://github.com/thewarefly/ng-inline-svg.git"
   },
   "homepage": "http://echeung.me/ng-inline-svg/",
   "bugs": {
-    "url": "https://github.com/arkon/ng-inline-svg/issues"
+    "url": "https://github.com/thewarefly/ng-inline-svg/issues"
   },
   "files": [
     "src/*",
