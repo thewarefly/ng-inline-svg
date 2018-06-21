@@ -30,7 +30,7 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "lint": "tslint --project tsconfig.json src/**/*.ts",
-    "build": "npm run lint && rimraf dist && ng-packagr -p ng-package.jso",
+    "build": "npm run lint && rimraf dist && ng-packagr -p ng-package.json",
     "prepare": "npm run build"
   },
   "peerDependencies": {
