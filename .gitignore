@@ -12,7 +12,7 @@ logs
 node_modules
 
 # Built files
-lib/
+dist/
 
 # Built demo files
 demo/dist

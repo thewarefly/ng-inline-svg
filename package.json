@@ -12,7 +12,7 @@
   },
   "files": [
     "src/*",
-    "lib/*",
+    "dist/*",
     "README.md",
     "LICENSE"
   ],
@@ -26,11 +26,11 @@
     "inject",
     "element"
   ],
-  "main": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "lint": "tslint --project tsconfig.json src/**/*.ts",
-    "build": "npm run lint && rimraf lib && tsc",
+    "build": "npm run lint && rimraf dist && ng-packagr -p ng-package.jso",
     "prepare": "npm run build"
   },
   "peerDependencies": {
@@ -43,6 +43,7 @@
     "@angular/compiler-cli": "^5.0.0",
     "@angular/core": "^5.0.0",
     "@angular/platform-browser": "^5.0.0",
+    "ng-packagr": "^3.0.3",
     "rimraf": "^2.6.2",
     "rxjs": "^5.5.2",
     "tslint": "^5.10.0",

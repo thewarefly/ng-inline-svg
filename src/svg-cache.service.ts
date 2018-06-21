@@ -11,12 +11,12 @@ import { InlineSVGConfig } from './inline-svg.config';
 
 @Injectable()
 export class SVGCacheService {
-  private static _cache: Map<string, SVGElement>;
-  private static _inProgressReqs: Map<string, Observable<SVGElement>>;
+  private static _cache: Map<string, SVGElement> = null;
+  private static _inProgressReqs: Map<string, Observable<SVGElement>> = null;
 
-  private static _baseUrl: string;
+  private static _baseUrl: string = null;
 
-  private _renderer: Renderer2;
+  private _renderer: Renderer2 = null;
 
   constructor(
     @Optional() config: InlineSVGConfig,
